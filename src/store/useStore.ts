@@ -3,8 +3,11 @@ import { persist } from "zustand/middleware";
 import type { PlayerCard, Team, Squad, Tournament, Match } from "@/types";
 import { SEED_CARDS, SEED_TEAMS } from "@/lib/seed";
 
+const SEED_VERSION = 2; // Incrementar cuando cambie el seed
+
 interface AppState {
   _hydrated: boolean;
+  _seedVersion: number;
   cards: PlayerCard[];
   teams: Team[];
   squads: Squad[];
@@ -42,6 +45,7 @@ export const useStore = create<AppState>()(
   persist(
     (set, get) => ({
       _hydrated: false,
+      _seedVersion: SEED_VERSION,
       cards: [],
       teams: [],
       squads: [],
@@ -141,9 +145,12 @@ export const useStore = create<AppState>()(
       }),
       onRehydrateStorage: () => (state) => {
         if (!state) return;
-        if (state.cards.length === 0 && state.teams.length === 0) {
+        const needsReseed = state.cards.length === 0 && state.teams.length === 0;
+        const versionMismatch = state._seedVersion !== SEED_VERSION;
+        if (needsReseed || versionMismatch) {
           state.setCards(SEED_CARDS);
           state.setTeams(SEED_TEAMS);
+          state._seedVersion = SEED_VERSION;
         }
         state.setHydrated();
       },
