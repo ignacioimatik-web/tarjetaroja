@@ -1,36 +1,178 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ADRENALYN CUP ⚽🏆
 
-## Getting Started
+**World Clubs & Nations Championship** — Gestor interactivo de campeonatos híbridos de cartas de fútbol.
 
-First, run the development server:
+Crea cartas de jugadores, construye plantillas híbridas de clubes y selecciones, compite en torneos globales de 8 a 32 equipos, y demuestra quién es el mejor manager.
+
+## Stack
+
+- **Next.js 16** (App Router)
+- **TypeScript**
+- **Tailwind CSS v4**
+- **Framer Motion**
+- **Zustand** (estado persistente en localStorage)
+- **Zod** (validación)
+- **Lucide React** (iconos)
+
+## Funcionalidades
+
+### Cartas
+- Biblioteca con filtros por nombre, equipo, posición y rareza
+- Creación manual de cartas con estadísticas y avatar
+- 7 rarezas: BASE, RARE, EPIC, LEGENDARY, GOLDEN, MOMENTUM, ULTRA_RARE
+- Avatares procedimentales SVG generados desde cero (sin APIs externas)
+
+### Equipos
+- Gestión de selecciones nacionales, clubes y equipos draft
+- Constructor visual de plantillas con formación
+- Validación automática de reglas por modo de juego
+- Índice de fuerza e índice de abuso
+
+### Torneos
+- Formatos: 8, 16, 24 y 32 equipos
+- Modos: Infantil, Estándar, Avanzado
+- Sorteo de grupos automático por bombos
+- Fase de grupos con calendario y clasificación
+- Eliminatorias con cuadro
+- Desempates completos
+
+### Partidos
+- Juego interactivo ronda a ronda
+- Selección de carta y estadística (ATT/CON/DEF)
+- Marcador en vivo
+- Timeline de rondas
+- Sustituciones
+
+### Administración
+- Dashboard con estadísticas
+- Exportar/importar backup completo JSON
+- Cargar datos de demostración
+- Persistencia local en localStorage
+
+## Requisitos
+
+- Node.js 18+
+- npm
+
+## Instalación
+
+```bash
+npm install
+```
+
+## Desarrollo
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abrir [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Producción
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Despliegue en Vercel
 
-To learn more about Next.js, take a look at the following resources:
+1. Conecta tu repositorio a [Vercel](https://vercel.com)
+2. Framework: Next.js
+3. Build command: `npm run build`
+4. Output directory: `.next`
+5. Vercel detecta la configuración automáticamente
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+O desde CLI:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npx vercel --prod
+```
 
-## Deploy on Vercel
+## Estructura del proyecto
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+├── app/            # Páginas (App Router)
+├── components/     # Componentes React
+│   ├── avatar/     # Sistema de avatares SVG
+│   ├── cards/      # Trading cards premium
+│   ├── layout/     # Navegación, shells
+│   ├── match/      # Motor de partido UI
+│   ├── team/       # Constructor de equipos
+│   └── tournament/ # UI de torneos
+├── lib/
+│   ├── match/      # Lógica de partidos
+│   ├── rules/      # Motor de reglas
+│   ├── seed/       # Datos de demostración + avatares
+│   ├── storage/    # Capa de persistencia (Repository pattern)
+│   └── tournament/ # Lógica de torneos
+├── store/          # Zustand store persistente
+└── types/          # Tipos TypeScript
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Migración a Supabase
+
+El proyecto usa localStorage por defecto pero incluye integración completa con **Supabase** lista para activar.
+
+### Stack de base de datos
+
+| Archivo | Propósito |
+|---------|-----------|
+| `src/lib/storage/Repository.ts` | Interfaz Repository (async) |
+| `src/lib/storage/LocalStorageRepository.ts` | Implementación localStorage |
+| `src/lib/storage/SupabaseRepository.ts` | Implementación Supabase |
+| `src/lib/storage/RepositoryProvider.tsx` | Provider React con detección automática |
+| `src/lib/db/supabase/` | Cliente Supabase |
+| `supabase/migrations/` | Migraciones SQL |
+
+### Cómo activar Supabase
+
+1. **Aplica la migración** desde el SQL Editor de Supabase:
+   ```sql
+   -- Copia el contenido de supabase/migrations/00001_create_tables.sql
+   ```
+
+2. **Configura las variables de entorno:**
+   ```bash
+   cp .env.local.example .env.local
+   # Edita .env.local con tus valores de Supabase
+   ```
+
+3. **Cambia a Supabase:**
+   ```env
+   NEXT_PUBLIC_USE_SUPABASE=true
+   ```
+
+4. **Reinicia la app:**
+   ```bash
+   npm run dev
+   ```
+
+### Arquitectura
+
+```
+┌─────────────────────────────────────────────────┐
+│  Zustand Store (caché en memoria)               │
+├─────────────────────────────────────────────────┤
+│  Repository (interfaz unificada)                │
+├────────────────────┬────────────────────────────┤
+│ localStorage (sync)│ Supabase (async)           │
+│ (por defecto)      │ (cuando NEXT_PUBLIC_USE    │
+│                    │  _SUPABASE=true)           │
+└────────────────────┴────────────────────────────┘
+```
+
+La app funciona 100% offline con localStorage. Cuando activas Supabase, el `RepositoryProvider` sincroniza los datos automáticamente.
+
+## Variables de entorno
+
+| Variable | Descripción | Requerida |
+|----------|-------------|-----------|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase | Para Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon key pública | Para Supabase |
+| `NEXT_PUBLIC_USE_SUPABASE` | `true` para usar Supabase | No (default: false) |
+
+## Licencia
+
+Uso interno.
