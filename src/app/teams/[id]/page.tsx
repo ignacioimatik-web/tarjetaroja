@@ -2,12 +2,13 @@
 
 import { useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Shirt, Save, ArrowLeft, X, Plus, Check, AlertTriangle } from "lucide-react";
+import { Shirt, Save, ArrowLeft, X, Check, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { useStore } from "@/store/useStore";
 import { ProTradingCard } from "@/components/cards/ProTradingCard";
 import { GlassPanel } from "@/components/layout/GlassPanel";
 import { EmptyState } from "@/components/layout/EmptyState";
+import { PitchView } from "@/components/team/PitchView";
 import { generateId } from "@/lib/utils";
 import { validateSquad, getSquadLegalitySummary } from "@/lib/rules";
 import { FORMATIONS } from "@/lib/constants";
@@ -200,57 +201,18 @@ export default function TeamDetailPage() {
               </div>
             </div>
 
-            {/* Pitch */}
-            <div className="relative w-full aspect-[3/4] sm:aspect-[2/3] bg-gradient-to-b from-emerald-900/60 via-emerald-950/50 to-emerald-900/60">
-              {/* Pitch markings */}
-              <div className="absolute inset-4 border border-white/10 rounded-lg">
-                <div className="absolute top-1/3 left-0 right-0 h-[1px] bg-white/10" />
-                <div className="absolute top-2/3 left-0 right-0 h-[1px] bg-white/10" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 border border-white/10 rounded-full" />
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-8 border border-white/10 rounded-t-full border-b-0" />
-              </div>
-
-              {/* Player slots */}
-              <div className="absolute inset-4">
-                {slots.map((slot, idx) => {
-                  const cardId = starters[idx];
-                  const card = cardId ? cards.find((c) => c.id === cardId) : undefined;
-                  return (
-                    <div
-                      key={slot.id}
-                      className="absolute"
-                      style={{ left: `${slot.x}%`, top: `${slot.y}%`, transform: "translate(-50%, -50%)" }}
-                    >
-                      {card ? (
-                        <div className="relative group">
-                          <ProTradingCard
-                            card={card}
-                            size="sm"
-                            interactive={false}
-                            className="shadow-lg shadow-black/40"
-                          />
-                          <button
-                            onClick={() => removeFromSlot(idx)}
-                            className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-600/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => setSelectedCardId(`slot-${idx}`)}
-                          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 border-2 border-dashed border-white/20 flex items-center justify-center hover:bg-white/20 hover:border-blue-400/50 transition-all group"
-                          title={`Añadir ${slot.label}`}
-                        >
-                          <Plus className="w-4 h-4 text-white/40 group-hover:text-blue-400" />
-                          <span className="absolute -bottom-4 text-[8px] text-white/40 uppercase font-bold">{slot.label}</span>
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            {/* Pitch with perspective */}
+            <PitchView
+              formation={formation}
+              starters={starters.map((id) => cards.find((c) => c.id === id))}
+              selectedCardId={selectedCardId}
+              onSlotClick={(idx) => {
+                if (selectedCardId) {
+                  assignToSlot(idx, selectedCardId);
+                }
+              }}
+              onRemoveFromSlot={removeFromSlot}
+            />
 
             {/* Substitutes */}
             <div className="px-3 py-3 border-t border-border/50">
