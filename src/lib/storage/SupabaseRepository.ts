@@ -1,9 +1,10 @@
 import { supabase } from "@/lib/db/supabase/client";
 import type { Repository } from "./Repository";
 import type { PlayerCard, Team, Squad, Tournament, Match } from "@/types";
-import { generateId } from "@/lib/utils";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyRecord = Record<string, any>;
 
-function mapCard(row: any): PlayerCard {
+function mapCard(row: AnyRecord): PlayerCard {
   return {
     id: row.id,
     name: row.name,
@@ -29,7 +30,7 @@ function mapCard(row: any): PlayerCard {
   };
 }
 
-function mapTeam(row: any): Team {
+function mapTeam(row: AnyRecord): Team {
   return {
     id: row.id,
     name: row.name,
@@ -42,7 +43,7 @@ function mapTeam(row: any): Team {
   };
 }
 
-function mapSquad(row: any): Squad {
+function mapSquad(row: AnyRecord): Squad {
   return {
     id: row.id,
     teamId: row.team_id,
@@ -55,7 +56,7 @@ function mapSquad(row: any): Squad {
   };
 }
 
-function mapTournament(row: any): Tournament {
+function mapTournament(row: AnyRecord): Tournament {
   return {
     id: row.id,
     name: row.name,
@@ -73,7 +74,7 @@ function mapTournament(row: any): Tournament {
   };
 }
 
-function mapMatch(row: any): Match {
+function mapMatch(row: AnyRecord): Match {
   return {
     id: row.id,
     tournamentId: row.tournament_id,
@@ -150,7 +151,7 @@ export function createSupabaseRepository(): Repository {
 
     updateCard: async (id, data) => {
       return withErrorHandling(async () => {
-        const updateData: any = { updated_at: new Date().toISOString() };
+        const updateData: Record<string, unknown> = { updated_at: new Date().toISOString() };
         if (data.name !== undefined) updateData.name = data.name;
         if (data.teamName !== undefined) updateData.team_name = data.teamName;
         if (data.position !== undefined) updateData.position = data.position;
@@ -333,7 +334,7 @@ export function createSupabaseRepository(): Repository {
 
     updateMatch: async (id, data) => {
       return withErrorHandling(async () => {
-        const updateData: any = {};
+        const updateData: Record<string, unknown> = {};
         if (data.homeScore !== undefined) updateData.home_score = data.homeScore;
         if (data.awayScore !== undefined) updateData.away_score = data.awayScore;
         if (data.rounds !== undefined) updateData.rounds = data.rounds;

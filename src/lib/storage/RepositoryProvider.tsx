@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import type { Repository } from "./Repository";
 import { createLocalRepository } from "./LocalStorageRepository";
 import { createSupabaseRepository } from "./SupabaseRepository";
@@ -80,12 +80,7 @@ export function RepositoryProvider({ children }: { children: React.ReactNode }) 
     }
   }, [backend]);
 
-  useEffect(() => {
-    if (backend === "supabase") {
-      syncFromRemote();
-    }
-  }, [backend, syncFromRemote]);
-
+  // Sync is handled by the store's onRehydrateStorage
   return (
     <RepositoryContext.Provider
       value={{ repo, backend, isOnline, switchBackend, syncFromRemote, syncToRemote }}

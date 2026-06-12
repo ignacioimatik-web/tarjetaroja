@@ -4,7 +4,6 @@ import { LIGA_TEAMS } from "./liga-data";
 import { PREMIER_TEAMS } from "./premier-data";
 import { NATIONAL_TEAMS } from "./national-teams-data";
 import { getPlayerNationality } from "./nationalities";
-import type { LigaPlayerData } from "./liga-data";
 
 const ALL_LEAGUES = [
   { data: LIGA_TEAMS, league: "LaLiga 2025/26", country: "España" },
@@ -87,8 +86,6 @@ export function generateSeedCards(teams?: Team[]): PlayerCard[] {
   }
 
   // Generate national team cards (for players not already in a club)
-  const clubPlayerNames = new Set(cards.map((c) => c.name));
-
   for (const nt of NATIONAL_TEAMS) {
     const ntTeam = teamsList.find((t) => t.name === nt.name);
     if (!ntTeam) continue;
