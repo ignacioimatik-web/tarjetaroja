@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
 import type { Repository } from "./Repository";
 import { createLocalRepository } from "./LocalStorageRepository";
 import { createSupabaseRepository } from "./SupabaseRepository";
@@ -52,11 +52,12 @@ export function RepositoryProvider({ children }: { children: React.ReactNode }) 
         supabaseRepo.getTournaments(),
         supabaseRepo.getMatches(),
       ]);
-      store.getState().setCards(cards);
-      store.getState().setTeams(teams);
-      store.getState().setSquads(squads);
-      store.getState().setTournaments(tournaments);
-      store.getState().setMatches(matches);
+      const state = store.getState();
+      if (cards.length > 0) state.setCards(cards);
+      if (teams.length > 0) state.setTeams(teams);
+      if (squads.length > 0) state.setSquads(squads);
+      if (tournaments.length > 0) state.setTournaments(tournaments);
+      if (matches.length > 0) state.setMatches(matches);
       setIsOnline(true);
     } catch {
       setIsOnline(false);
@@ -80,7 +81,12 @@ export function RepositoryProvider({ children }: { children: React.ReactNode }) 
     }
   }, [backend]);
 
-  // Sync is handled by the store's onRehydrateStorage
+  useEffect(() => {
+    if (backend === "supabase") {
+      syncFromRemote();
+    }
+  }, [backend, syncFromRemote]);
+
   return (
     <RepositoryContext.Provider
       value={{ repo, backend, isOnline, switchBackend, syncFromRemote, syncToRemote }}
