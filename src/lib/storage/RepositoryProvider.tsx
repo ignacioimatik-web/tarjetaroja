@@ -53,13 +53,28 @@ export function RepositoryProvider({ children }: { children: React.ReactNode }) 
         supabaseRepo.getMatches(),
       ]);
       const state = store.getState();
-      if (cards.length > 0) state.setCards(cards);
-      if (teams.length > 0) state.setTeams(teams);
-      if (squads.length > 0) state.setSquads(squads);
-      if (tournaments.length > 0) state.setTournaments(tournaments);
-      if (matches.length > 0) state.setMatches(matches);
-      setIsOnline(true);
+      if (cards.length > 0 && teams.length > 0) {
+        state.setCards(cards);
+        state.setTeams(teams);
+        if (squads.length > 0) state.setSquads(squads);
+        if (tournaments.length > 0) state.setTournaments(tournaments);
+        if (matches.length > 0) state.setMatches(matches);
+        setIsOnline(true);
+      } else {
+        // Fallback to seed data when Supabase is empty
+        const { SEED_CARDS, SEED_TEAMS } = await import("@/lib/seed");
+        state.setCards(SEED_CARDS);
+        state.setTeams(SEED_TEAMS);
+        setIsOnline(false);
+      }
     } catch {
+      const store = (await import("@/store/useStore")).useStore;
+      const state = store.getState();
+      if (state.cards.length === 0) {
+        const { SEED_CARDS, SEED_TEAMS } = await import("@/lib/seed");
+        state.setCards(SEED_CARDS);
+        state.setTeams(SEED_TEAMS);
+      }
       setIsOnline(false);
     }
   }, [backend]);

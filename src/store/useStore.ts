@@ -148,16 +148,9 @@ export const useStore = create<AppState>()(
         if (!state) return;
         const isEmpty = state.cards.length === 0 && state.teams.length === 0;
         const versionMismatch = state._seedVersion !== SEED_VERSION;
-        const useSupabase = shouldUseSupabase();
-        if (isEmpty && !useSupabase) {
+        if (isEmpty || versionMismatch) {
           state.setCards(SEED_CARDS);
           state.setTeams(SEED_TEAMS);
-          state._seedVersion = SEED_VERSION;
-        } else if (versionMismatch && !useSupabase) {
-          state.setCards(SEED_CARDS);
-          state.setTeams(SEED_TEAMS);
-          state._seedVersion = SEED_VERSION;
-        } else if (versionMismatch && useSupabase) {
           state._seedVersion = SEED_VERSION;
         }
         state.setHydrated();
