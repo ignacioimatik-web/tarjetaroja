@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Trophy, LayoutDashboard, Users, Shirt, Settings, Menu, X } from "lucide-react";
+import { Trophy, LayoutDashboard, Users, Shirt, Settings, Menu, X, Image } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/cards", label: "Cartas", icon: Trophy },
+  { href: "/cards/templates", label: "Plantillas", icon: Image },
   { href: "/teams", label: "Equipos", icon: Shirt },
   { href: "/tournaments", label: "Torneos", icon: Users },
   { href: "/admin", label: "Admin", icon: Settings },

@@ -179,3 +179,25 @@ export interface AvatarConfig {
 }
 
 export type AvatarStyle = "classic" | "neon" | "gold" | "shadow" | "rookie" | "legend";
+
+export type TemplateRarity = "common" | "rare" | "epic" | "legendary" | "mythic" | "custom";
+export type TemplateSource = "uploaded" | "builtin";
+
+export interface LayoutConfig {
+  playerImage: { x: number; y: number; scale: number };
+  overall: { x: number; y: number };
+  position: { x: number; y: number };
+  name: { x: number; y: number };
+  stats: { x: number; y: number };
+}
+
+export interface CardTemplate {
+  id: string;
+  name: string;
+  rarity: TemplateRarity;
+  imageUrl: string;
+  createdAt: string;
+  isDefault: boolean;
+  source: TemplateSource;
+  layoutConfig: LayoutConfig;
+}
