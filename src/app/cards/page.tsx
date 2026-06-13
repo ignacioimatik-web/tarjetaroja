@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Trophy, Search, Filter } from "lucide-react";
+import Link from "next/link";
 import { useStore } from "@/store/useStore";
 import { ProTradingCard } from "@/components/cards/ProTradingCard";
 import { cn } from "@/lib/utils";
@@ -81,7 +82,9 @@ export default function CardsPage() {
         viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" : "space-y-2"
       )}>
         {filteredCards.map((card) => (
-          <ProTradingCard key={card.id} card={card} size={viewMode === "compact" ? "sm" : "md"} />
+          <Link key={card.id} href={`/cards/${card.id}`}>
+            <ProTradingCard card={card} size={viewMode === "compact" ? "sm" : "md"} />
+          </Link>
         ))}
       </div>
 

@@ -25,70 +25,120 @@ export function PitchView({
   const slots = useMemo(() => getFormationSlots(formation), [formation]);
 
   return (
-    <div className="relative w-full perspective-[800px]">
+    <div className="relative w-full perspective-[600px]">
+      {/* Stadium glow behind the pitch */}
+      <div className="absolute -inset-4 bg-gradient-to-b from-blue-500/5 via-transparent to-emerald-500/10 rounded-3xl blur-3xl pointer-events-none" />
+
       <div
         className="relative w-full origin-bottom transition-transform duration-500"
         style={{
-          transform: "rotateX(55deg)",
+          transform: "rotateX(5deg)",
           transformStyle: "preserve-3d",
         }}
       >
+        {/* Stadium shadow */}
+        <div className="absolute -bottom-2 left-[5%] right-[5%] h-8 bg-black/40 blur-xl rounded-full" />
+
         {/* Pitch surface */}
-        <div className="relative w-full aspect-[2/3] bg-gradient-to-b from-emerald-800 via-emerald-900 to-emerald-950 rounded-lg overflow-hidden shadow-2xl shadow-emerald-900/50 border border-emerald-700/30">
-          {/* Grass stripes */}
-          <div className="absolute inset-0 overflow-hidden opacity-20">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-full h-[8.33%]"
-                style={{
-                  top: `${i * 8.33}%`,
-                  background: i % 2 === 0 ? "rgba(255,255,255,0.03)" : "transparent",
-                }}
-              />
-            ))}
+        <div className="relative w-full aspect-[2/3] rounded-xl overflow-hidden shadow-2xl shadow-black/60 border-2 border-emerald-700/40">
+          {/* Grass background with realistic stripes */}
+          <div className="absolute inset-0 bg-gradient-to-b from-emerald-600/70 via-emerald-700/80 to-emerald-800/90">
+            {/* Grass stripes - alternating dark/light */}
+            <div className="absolute inset-0 overflow-hidden">
+              {Array.from({ length: 14 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-full"
+                  style={{
+                    top: `${i * 7.14}%`,
+                    height: "7.14%",
+                    background: i % 2 === 0
+                      ? "linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06), rgba(255,255,255,0.03))"
+                      : "linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.06), rgba(0,0,0,0.03))",
+                  }}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Pitch markings - transformed for perspective */}
-          <div className="absolute inset-[8%] border border-white/15 rounded-sm">
+          {/* Grass texture overlay */}
+          <div
+            className="absolute inset-0 opacity-[0.08] mix-blend-overlay pointer-events-none"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.3) 1px, transparent 0)",
+              backgroundSize: "6px 6px",
+            }}
+          />
+
+          {/* Main pitch border */}
+          <div className="absolute inset-[5%] border-[2px] border-white/20 rounded-sm">
             {/* Center line */}
-            <div className="absolute top-1/2 left-0 right-0 h-[1.5px] bg-white/15" />
+            <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-white/20" />
 
             {/* Center circle */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[25%] aspect-square border border-white/15 rounded-full" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[22%] aspect-square border-[2px] border-white/20 rounded-full" />
 
             {/* Center dot */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[3%] aspect-square bg-white/20 rounded-full" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[2.5%] aspect-square bg-white/25 rounded-full" />
 
             {/* Penalty areas */}
-            <div className="absolute bottom-0 left-[15%] right-[15%] h-[25%] border border-white/15 border-b-0 rounded-t-sm" />
-            <div className="absolute top-0 left-[15%] right-[15%] h-[25%] border border-white/15 border-t-0 rounded-b-sm" />
+            <div className="absolute bottom-0 left-[18%] right-[18%] h-[22%] border-[2px] border-white/15 border-b-0 rounded-t-sm" />
+            <div className="absolute top-0 left-[18%] right-[18%] h-[22%] border-[2px] border-white/15 border-t-0 rounded-b-sm" />
 
-            {/* Goal areas */}
-            <div className="absolute bottom-0 left-[32%] right-[32%] h-[10%] border border-white/15 border-b-0 rounded-t-sm" />
-            <div className="absolute top-0 left-[32%] right-[32%] h-[10%] border border-white/15 border-t-0 rounded-b-sm" />
+            {/* Goal areas (6-yard box) */}
+            <div className="absolute bottom-0 left-[35%] right-[35%] h-[10%] border-[2px] border-white/15 border-b-0 rounded-t-sm" />
+            <div className="absolute top-0 left-[35%] right-[35%] h-[10%] border-[2px] border-white/15 border-t-0 rounded-b-sm" />
 
             {/* Penalty spots */}
-            <div className="absolute bottom-[18%] left-1/2 -translate-x-1/2 w-[2%] aspect-square bg-white/15 rounded-full" />
-            <div className="absolute top-[18%] left-1/2 -translate-x-1/2 w-[2%] aspect-square bg-white/15 rounded-full" />
-
-            {/* Goals */}
-            <div className="absolute bottom-0 left-[38%] right-[38%] h-[3%] bg-white/20 rounded-t-sm border border-white/20 border-b-0" />
-            <div className="absolute top-0 left-[38%] right-[38%] h-[3%] bg-white/20 rounded-b-sm border border-white/20 border-t-0" />
+            <div className="absolute bottom-[17%] left-1/2 -translate-x-1/2 w-[2%] aspect-square bg-white/25 rounded-full shadow-[0_0_6px_rgba(255,255,255,0.3)]" />
+            <div className="absolute top-[17%] left-1/2 -translate-x-1/2 w-[2%] aspect-square bg-white/25 rounded-full shadow-[0_0_6px_rgba(255,255,255,0.3)]" />
 
             {/* Corner arcs */}
-            <div className="absolute bottom-0 left-0 w-[6%] aspect-square border border-white/15 rounded-br-full border-l-0 border-t-0" />
-            <div className="absolute bottom-0 right-0 w-[6%] aspect-square border border-white/15 rounded-bl-full border-r-0 border-t-0" />
-            <div className="absolute top-0 left-0 w-[6%] aspect-square border border-white/15 rounded-tr-full border-l-0 border-b-0" />
-            <div className="absolute top-0 right-0 w-[6%] aspect-square border border-white/15 rounded-tl-full border-r-0 border-b-0" />
+            <div className="absolute bottom-0 left-0 w-[7%] aspect-square border-[2px] border-white/20 rounded-br-full border-l-0 border-t-0" />
+            <div className="absolute bottom-0 right-0 w-[7%] aspect-square border-[2px] border-white/20 rounded-bl-full border-r-0 border-t-0" />
+            <div className="absolute top-0 left-0 w-[7%] aspect-square border-[2px] border-white/20 rounded-tr-full border-l-0 border-b-0" />
+            <div className="absolute top-0 right-0 w-[7%] aspect-square border-[2px] border-white/20 rounded-tl-full border-r-0 border-b-0" />
+
+            {/* Corner flag dots */}
+            <div className="absolute bottom-0 left-0 -translate-x-1/2 translate-y-1/2 w-[1.5%] aspect-square bg-white/30 rounded-full" />
+            <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-[1.5%] aspect-square bg-white/30 rounded-full" />
+            <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-[1.5%] aspect-square bg-white/30 rounded-full" />
+            <div className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 w-[1.5%] aspect-square bg-white/30 rounded-full" />
           </div>
 
-          {/* Goals glow */}
-          <div className="absolute bottom-[5%] left-[35%] right-[35%] h-[2%] bg-gradient-to-r from-blue-500/20 via-blue-400/40 to-blue-500/20 blur-sm" />
-          <div className="absolute top-[5%] left-[35%] right-[35%] h-[2%] bg-gradient-to-r from-blue-500/20 via-blue-400/40 to-blue-500/20 blur-sm" />
+          {/* Goals with nets */}
+          <div className="absolute bottom-[4%] left-[38%] right-[38%] z-10">
+            <div className="relative">
+              {/* Goal frame */}
+              <div className="h-[6%] bg-white/30 rounded-t-sm border border-white/30 border-b-0 shadow-[0_-4px_15px_rgba(255,255,255,0.15)]" />
+              {/* Net pattern */}
+              <div
+                className="absolute -bottom-3 left-0 right-0 h-3 opacity-40"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(45deg, rgba(255,255,255,0.3) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.3) 75%, transparent 75%, transparent)",
+                  backgroundSize: "4px 4px",
+                }}
+              />
+            </div>
+          </div>
+          <div className="absolute top-[4%] left-[38%] right-[38%] z-10">
+            <div className="relative">
+              <div className="h-[6%] bg-white/30 rounded-b-sm border border-white/30 border-t-0 shadow-[0_4px_15px_rgba(255,255,255,0.15)]" />
+              <div
+                className="absolute -top-3 left-0 right-0 h-3 opacity-40"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(45deg, rgba(255,255,255,0.3) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.3) 75%, transparent 75%, transparent)",
+                  backgroundSize: "4px 4px",
+                }}
+              />
+            </div>
+          </div>
 
           {/* Players on the pitch */}
-          <div className="absolute inset-[8%]">
+          <div className="absolute inset-[5%]">
             <AnimatePresence>
               {slots.map((slot, idx) => {
                 const card = starters[idx];
@@ -99,7 +149,7 @@ export function PitchView({
                     style={{
                       left: `${slot.x}%`,
                       top: `${slot.y}%`,
-                      transform: "translate(-50%, -50%) translateZ(20px)",
+                      transform: "translate(-50%, -50%) translateZ(10px)",
                     }}
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -109,22 +159,23 @@ export function PitchView({
                     {card ? (
                       <motion.div
                         className="relative group cursor-pointer"
-                        whileHover={{ scale: 1.1, zIndex: 50 }}
+                        whileHover={{ scale: 1.15, zIndex: 50 }}
                         layout
                         layoutId={`player-${card.id}`}
                       >
+                        {/* Player shadow on pitch */}
+                        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-8 h-2 bg-black/30 rounded-full blur-sm" />
                         <div
                           className="relative"
-                          style={{ transform: "rotateX(-55deg)" }}
+                          style={{ transform: "rotateX(-5deg)" }}
                         >
                           <ProTradingCard
                             card={card}
                             size="sm"
                             interactive={false}
-                            className="shadow-2xl shadow-black/60"
+                            className="shadow-2xl shadow-black/70"
                           />
                         </div>
-                        {/* Remove button */}
                         <motion.button
                           initial={{ opacity: 0, scale: 0 }}
                           whileHover={{ scale: 1.2 }}
@@ -140,21 +191,23 @@ export function PitchView({
                       <motion.button
                         onClick={() => onSlotClick(idx)}
                         className={`relative flex items-center justify-center
-                          w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-dashed
+                          w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2
                           transition-all duration-300 group
                           ${selectedCardId
                             ? "border-blue-400/70 bg-blue-500/15 shadow-[0_0_20px_rgba(59,130,246,0.3)] animate-pulse-glow"
-                            : "border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/10"
+                            : "border-dashed border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/10"
                           }`}
                         whileHover={{ scale: 1.15 }}
                         whileTap={{ scale: 0.95 }}
                       >
+                        {/* Slot shadow */}
+                        <div className="absolute -bottom-1 w-6 h-1.5 bg-black/20 rounded-full blur-sm" />
                         {selectedCardId ? (
                           <Sparkles className="w-4 h-4 text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
                         ) : (
                           <Plus className="w-4 h-4 text-white/30 group-hover:text-white/60" />
                         )}
-                        <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-[7px] font-bold text-white/30 uppercase tracking-wider">
+                        <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-[7px] font-bold text-white/40 uppercase tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                           {slot.label}
                         </span>
                       </motion.button>
@@ -165,9 +218,13 @@ export function PitchView({
             </AnimatePresence>
           </div>
 
-          {/* Vignette */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/40 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 pointer-events-none" />
+          {/* Subtle vignette overlay for depth */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/30 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-transparent to-black/15 pointer-events-none" />
+
+          {/* Top/bottom lighting */}
+          <div className="absolute top-0 left-0 right-0 h-1/3 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-emerald-900/20 to-transparent pointer-events-none" />
         </div>
       </div>
     </div>
