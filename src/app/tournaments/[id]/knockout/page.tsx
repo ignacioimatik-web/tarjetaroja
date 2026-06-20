@@ -33,6 +33,7 @@ export default function TournamentKnockoutPage() {
   const bracket = tournament.knockoutBracket;
 
   function handleAdvanceToKnockout() {
+    if (!tournament) return;
     const { groupQualifiers, bestThird } = getQualifiers(sorted, matches, tournament.format, tournament.groups);
     const newBracket = generateKnockoutBracket(groupQualifiers, bestThird, tournament.format);
     setTournaments(
