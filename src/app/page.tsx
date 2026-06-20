@@ -6,7 +6,19 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-stadium flex flex-col">
+    <div className="min-h-screen relative flex flex-col overflow-hidden">
+
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="https://cdn.coverr.co/videos/coverr-football-stadium-lights-at-night-5810/1080p.mp4" type="video/mp4" />
+      </video>
+
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 z-[1]" />
       <nav className="absolute top-0 left-0 right-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
