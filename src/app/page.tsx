@@ -8,15 +8,13 @@ export default function Home() {
   return (
     <div className="min-h-screen relative flex flex-col overflow-hidden">
 
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-      >
-        <source src="https://cdn.coverr.co/videos/coverr-football-stadium-lights-at-night-5810/1080p.mp4" type="video/mp4" />
-      </video>
+      <div className="absolute inset-0 overflow-hidden">
+        <iframe
+          src="https://www.youtube.com/embed/UumCHm93pME?autoplay=1&mute=1&loop=1&playlist=UumCHm93pME&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1"
+          allow="autoplay; encrypted-media"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] h-[56.25vw] min-w-full min-h-full pointer-events-none"
+        />
+      </div>
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 z-[1]" />
       <nav className="absolute top-0 left-0 right-0 z-20">
