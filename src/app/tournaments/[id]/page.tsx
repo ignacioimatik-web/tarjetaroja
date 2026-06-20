@@ -125,7 +125,7 @@ export default function TournamentDetailPage() {
                   Ver Grupos y Calendario
                 </Link>
               )}
-              {tournament.status === "knockout" && (
+              {(tournament.status === "knockout" || (tournament.status === "groups" && matches.filter((m) => m.tournamentId === tournament.id && m.phase === "group").length > 0 && matches.filter((m) => m.tournamentId === tournament.id && m.phase === "group").every((m) => m.status === "finished"))) && (
                 <Link
                   href={`/tournaments/${tournament.id}/knockout`}
                   className="block w-full text-center py-2 bg-violet-600/20 text-violet-400 text-sm font-medium rounded-lg hover:bg-violet-600/30 transition-all"

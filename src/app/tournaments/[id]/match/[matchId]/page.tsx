@@ -114,7 +114,7 @@ export default function MatchPage() {
       tournaments.map((t) => (t.id === tournament.id ? updatedTournament : t))
     );
 
-    router.push(`/tournaments/${tournament.id}/groups`);
+    router.push(match.phase === "knockout" ? `/tournaments/${tournament.id}/knockout` : `/tournaments/${tournament.id}/groups`);
   }
 
   const maxRounds = tournament.rules.maxRounds;
